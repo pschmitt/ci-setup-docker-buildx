@@ -28,6 +28,7 @@ setup_docker() {
       mv "${config}.new" "$config"
     fi
   else
+    mkdir -p "$(dirname "$config")"
     echo '{"experimental": "true"}' > "$config"
   fi
 }
