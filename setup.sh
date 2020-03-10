@@ -103,7 +103,7 @@ setup_buildx() {
   debug_info
 }
 
-echo "Starting docker build setup"
+echo "Starting docker buildx setup"
 update_docker
 # setup_docker
 
