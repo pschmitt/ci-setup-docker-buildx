@@ -39,12 +39,12 @@ setup_docker() {
   then
     if [[ "$(jq -r '.experimental?' "$config")" == "null" ]]
     then
-      jq '. + {"experimental": "true"}' "$config" > "${config}.new"
+      jq '. + {"experimental": "enabled"}' "$config" > "${config}.new"
       mv "${config}.new" "$config"
     fi
   else
     mkdir -p "$(dirname "$config")"
-    echo '{"experimental": "true"}' > "$config"
+    echo '{"experimental": "enabled"}' > "$config"
   fi
 }
 
