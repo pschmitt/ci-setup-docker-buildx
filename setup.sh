@@ -4,6 +4,27 @@ usage() {
   echo "$(basename "$0")"
 }
 
+update_docker() {
+  if [[ "$TRAVIS" == "true" ]]
+  then
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt-get update
+    sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  elif [[ "$GITHUB_ACTIONS" == "true" ]]
+  then
+    curl -fsSL https://get.docker.com | bash
+  fi
+}
+
+setup_docker() {
+  if [[ "$TRAVIS" == "true" ]]
+  then
+    echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+    sudo service docker restart
+  fi
+}
+
 get_latest_buildx_version() {
   # Prefer local script
   if ! [[ -x ./git-latest-version.sh ]]
@@ -84,6 +105,9 @@ setup_buildx() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
+  update_docker
+  # setup_docker
+
   # buildx setup
   export DOCKER_CLI_EXPERIMENTAL=enabled
   export PATH="${PATH}:~/.docker/cli-plugins"
