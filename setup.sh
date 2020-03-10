@@ -103,6 +103,7 @@ setup_buildx() {
   debug_info
 }
 
+echo "Starting docker build setup"
 update_docker
 # setup_docker
 
@@ -121,8 +122,5 @@ then
   echo "buildx is not available" >&2
   exit 99
 fi
-
-echo DEBUG
-docker buildx ls
 
 # vim set et ts=2 sw=2 :
