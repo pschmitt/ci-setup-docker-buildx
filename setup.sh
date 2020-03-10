@@ -4,8 +4,20 @@ usage() {
   echo "$(basename "$0")"
 }
 
+is_travis() {
+  [[ "$TRAVIS" == "true" ]]
+}
+
+is_github_actions() {
+  [[ "$GITHUB_ACTIONS" == "true" ]]
+}
+
+is_ci() {
+  is_travis || is_github_actions
+}
+
 install_dependencies() {
-  if [[ "$TRAVIS" == "true" ]] || [[ "$GITHUB_ACTIONS" == "true" ]]
+  if is_ci
   then
     apt update
     apt install -y jq
@@ -13,14 +25,14 @@ install_dependencies() {
 }
 
 update_docker() {
-  if [[ "$TRAVIS" == "true" ]]
+  if is_travis
   then
     # FIXME Wouldn't "curl -fsSL https://get.docker.com | bash" be enough?
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update
     sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-  elif [[ "$GITHUB_ACTIONS" == "true" ]]
+  elif is_github_actions
   then
     curl -fsSL https://get.docker.com | bash
   fi
@@ -29,6 +41,7 @@ update_docker() {
 setup_docker() {
   # Append experimental: true to docker cli config
   local config=~/.docker/config.json
+
   if [[ -e "$config" ]]
   then
     if [[ "$(jq -r '.experimental?' "$config")" == "null" ]]
@@ -105,7 +118,7 @@ setup_buildx() {
   esac
 
   # CI
-  if [[ "$GITHUB_ACTIONS" == "true" ]] || [[ "$TRAVIS" == "true" ]]
+  if is_ci
   then
     docker buildx create \
       --use \
