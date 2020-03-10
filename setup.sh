@@ -10,6 +10,7 @@ get_latest_buildx_version() {
   then
     # Download
     curl -O -L https://raw.githubusercontent.com/pschmitt/ci-setup-docker-buildx/master/git-latest-version.sh
+    chmod +x ./git-latest-version.sh
   fi
   ./git-latest-version.sh docker/buildx
 }
