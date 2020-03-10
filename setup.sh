@@ -25,14 +25,7 @@ install_dependencies() {
 }
 
 update_docker() {
-  if is_travis
-  then
-    # FIXME Wouldn't "curl -fsSL https://get.docker.com | bash" be enough?
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-  elif is_github_actions
+  if is_ci
   then
     curl -fsSL https://get.docker.com | bash
   fi
