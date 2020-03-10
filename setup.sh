@@ -122,4 +122,7 @@ then
   exit 99
 fi
 
+echo DEBUG
+docker buildx ls
+
 # vim set et ts=2 sw=2 :
