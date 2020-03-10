@@ -18,10 +18,12 @@ update_docker() {
 }
 
 setup_docker() {
-  if [[ "$TRAVIS" == "true" ]]
+  # Append experimental: true to docker cli config
+  local config=~/.docker/config.json
+  if [[ "$(jq -r '.experimental?' "$config")" == "null" ]]
   then
-    echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-    sudo service docker restart
+    jq '. + {"experimental": "true"}' "$config" > "${config}.new"
+    mv "${config}.new" "$config"
   fi
 }
 
@@ -105,11 +107,11 @@ setup_buildx() {
 
 echo "Starting docker buildx setup"
 update_docker
-# setup_docker
+setup_docker
 
 # buildx setup
-export DOCKER_CLI_EXPERIMENTAL=enabled
-export PATH="${PATH}:~/.docker/cli-plugins"
+# export DOCKER_CLI_EXPERIMENTAL=enabled
+# export PATH="${PATH}:~/.docker/cli-plugins"
 
 if ! [[ -x ~/.docker/cli-plugins/docker-buildx ]]
 then
