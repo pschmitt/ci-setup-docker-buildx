@@ -20,10 +20,15 @@ update_docker() {
 setup_docker() {
   # Append experimental: true to docker cli config
   local config=~/.docker/config.json
-  if [[ "$(jq -r '.experimental?' "$config")" == "null" ]]
+  if [[ -e "$config" ]]
   then
-    jq '. + {"experimental": "true"}' "$config" > "${config}.new"
-    mv "${config}.new" "$config"
+    if [[ "$(jq -r '.experimental?' "$config")" == "null" ]]
+    then
+      jq '. + {"experimental": "true"}' "$config" > "${config}.new"
+      mv "${config}.new" "$config"
+    fi
+  else
+    echo '{"experimental": "true"}' > "$config"
   fi
 }
 
