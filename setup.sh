@@ -103,26 +103,23 @@ setup_buildx() {
   debug_info
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
+update_docker
+# setup_docker
+
+# buildx setup
+export DOCKER_CLI_EXPERIMENTAL=enabled
+export PATH="${PATH}:~/.docker/cli-plugins"
+
+if ! [[ -x ~/.docker/cli-plugins/docker-buildx ]]
 then
-  update_docker
-  # setup_docker
+  install_latest_buildx
+  setup_buildx
+fi
 
-  # buildx setup
-  export DOCKER_CLI_EXPERIMENTAL=enabled
-  export PATH="${PATH}:~/.docker/cli-plugins"
-
-  if ! [[ -x ~/.docker/cli-plugins/docker-buildx ]]
-  then
-    install_latest_buildx
-    setup_buildx
-  fi
-
-  if ! docker buildx version >/dev/null
-  then
-    echo "buildx is not available" >&2
-    exit 99
-  fi
+if ! docker buildx version >/dev/null
+then
+  echo "buildx is not available" >&2
+  exit 99
 fi
 
 # vim set et ts=2 sw=2 :
