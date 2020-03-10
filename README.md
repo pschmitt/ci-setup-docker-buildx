@@ -15,6 +15,8 @@ language: minimal
 sudo: required
 services:
   - docker
+packages:
+  - jq
 before_install:
   # Install docker buildx
   - curl -fsSL https://raw.githubusercontent.com/pschmitt/ci-setup-docker-buildx/master/setup.sh | bash

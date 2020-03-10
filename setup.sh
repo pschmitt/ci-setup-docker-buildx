@@ -4,9 +4,18 @@ usage() {
   echo "$(basename "$0")"
 }
 
+install_dependencies() {
+  if [[ "$TRAVIS" == "true" ]] || [[ "$GITHUB_ACTIONS" == "true" ]]
+  then
+    apt update
+    apt install -y jq
+  fi
+}
+
 update_docker() {
   if [[ "$TRAVIS" == "true" ]]
   then
+    # FIXME Wouldn't "curl -fsSL https://get.docker.com | bash" be enough?
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     sudo apt-get update
@@ -114,10 +123,6 @@ setup_buildx() {
 echo "Starting docker buildx setup"
 update_docker
 setup_docker
-
-# buildx setup
-# export DOCKER_CLI_EXPERIMENTAL=enabled
-# export PATH="${PATH}:~/.docker/cli-plugins"
 
 if ! [[ -x ~/.docker/cli-plugins/docker-buildx ]]
 then
