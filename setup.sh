@@ -55,6 +55,8 @@ setup_docker() {
     mkdir -p "$(dirname "$config")"
     echo '{"experimental": "enabled"}' > "$config"
   fi
+
+  export DOCKER_CLI_EXPERIMENTAL=enabled
 }
 
 get_latest_buildx_version() {
