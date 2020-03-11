@@ -25,9 +25,6 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Install latest Docker X version
-        run: curl -fsSL https://raw.githubusercontent.com/pschmitt/ci-setup-docker-buildx/master/setup.sh | bash
-
       - name: Docker login
         uses: azure/docker-login@v1
         with:
@@ -35,7 +32,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build
-        run: docker buildx build XXX
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/pschmitt/ci-setup-docker-buildx/master/setup.sh | bash
+          docker buildx build XXX
 ```
 
 ### Travis CI
