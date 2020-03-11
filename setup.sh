@@ -75,7 +75,7 @@ install_latest_buildx() {
   local buildx_path=~/.docker/cli-plugins/docker-buildx
   local version
 
-  version="$(get_latest_buildx_version)"
+  version="${BUILDX_VERSION:-$(get_latest_buildx_version)}"
 
   if [[ -x "$buildx_path" ]]
   then
