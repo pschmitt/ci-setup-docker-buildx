@@ -34,7 +34,9 @@ update_docker() {
     sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   elif is_github_actions
   then
-    curl -fsSL https://get.docker.com | bash
+    curl -fsSL https://get.docker.com | \
+      sed -r 's/sleep [0-9]+/sleep 0.1/' | \
+      bash
   fi
 }
 
