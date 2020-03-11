@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+MIN_DOCKER_VERSION=${MIN_DOCKER_VERSION:-19.03}
+
 usage() {
   echo "$(basename "$0")"
 }
@@ -24,7 +26,29 @@ install_dependencies() {
   fi
 }
 
+get_docker_version() {
+  docker version --format '{{json .}}' | jq -r '.Client.Version'
+}
+
+check_docker_version() {
+  local version
+
+  version="$(get_docker_version)"
+  if [[ -z "$version" ]]
+  then
+    echo "Unable to determine installed Docker version" >&2
+    return 1
+  fi
+  [[ "$(echo -e "$version\n$MIN_DOCKER_VERSION" | sort -V | head -1)" == "$MIN_DOCKER_VERSION" ]]
+}
+
 update_docker() {
+  if check_docker_version
+  then
+    echo "Docker is up to date: local=$(get_docker_version) min=$MIN_DOCKER_VERSION"
+    return
+  fi
+
   if is_travis
   then
     # FIXME Wouldn't "curl -fsSL https://get.docker.com | bash" be enough?
