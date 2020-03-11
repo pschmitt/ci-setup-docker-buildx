@@ -132,7 +132,7 @@ setup_buildx() {
       --use \
       --name builder \
       --node builder \
-      --driver docker-container
+      --driver docker
   fi
   docker buildx inspect --bootstrap
 
