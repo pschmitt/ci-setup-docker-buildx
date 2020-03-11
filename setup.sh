@@ -132,8 +132,7 @@ setup_buildx() {
       --use \
       --name builder \
       --node builder \
-      --driver docker \
-      --driver-opt network=host
+      --driver docker-container
   fi
   docker buildx inspect --bootstrap
 
