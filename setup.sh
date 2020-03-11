@@ -118,7 +118,7 @@ setup_buildx() {
   esac
 
   # CI
-  if is_ci
+  if is_travis
   then
     docker buildx create \
       --use \
@@ -126,6 +126,13 @@ setup_buildx() {
       --node builder \
       --driver docker-container \
       --driver-opt network=host
+  elif is_github_actions
+  then
+    docker buildx create \
+      --use \
+      --name builder \
+      --node builder \
+      --driver docker-container
   fi
   docker buildx inspect --bootstrap
 
