@@ -132,13 +132,16 @@ setup_buildx() {
       --use \
       --name builder \
       --node builder \
-      --driver docker
+      --driver docker \
+      --driver-opt network=host
   fi
   docker buildx inspect --bootstrap
 
   # Debug info for buildx and multiarch support
   debug_info
 }
+
+set -ex
 
 echo "Starting docker buildx setup"
 update_docker
